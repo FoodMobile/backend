@@ -1,4 +1,4 @@
-package com.foodmobile.server.Auth.loginmodels;
+package com.foodmobile.server.auth.loginmodels;
 
 import java.util.LinkedHashMap;
 
