@@ -13,12 +13,11 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>server</name>
 	<description>Food Mobile Server</description>
+    <packaging>war</packaging>
 
 	<properties>
 		<java.version>11</java.version>
 	</properties>
-
-    <packaging>war</packaging>
 
 	<dependencies>
 		<dependency>
@@ -68,8 +67,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.foodmobile.server.ServerApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>foodmobile-${artifactId}</finalName>
 	</build>
 
 </project>
