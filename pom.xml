@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>server</name>
 	<description>Food Mobile Server</description>
+    <packaging>war</packaging>
 
 	<properties>
 		<java.version>11</java.version>
@@ -38,6 +39,12 @@
 			<version>1.4</version>
 		</dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
 		<!-- Mongo DB/ Database Dependencies-->
 
 
@@ -60,8 +67,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.foodmobile.server.ServerApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>foodmobile-${artifactId}</finalName>
 	</build>
 
 </project>
