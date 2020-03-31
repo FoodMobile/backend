@@ -18,7 +18,12 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
-
+	<repositories>
+		<repository>
+			<id>FoodmobileRepo</id>
+			<url>https://mymavenrepo.com/repo/15MSmTSCqdNKgB3459tN/</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -60,6 +65,24 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!--	Database Library	-->
+		<dependency>
+			<groupId>org.foodmobile</groupId>
+			<artifactId>databaselib</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- Security and JWT-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
