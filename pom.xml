@@ -50,10 +50,6 @@
             <scope>provided</scope>
         </dependency>
 
-		<!-- Mongo DB/ Database Dependencies-->
-
-
-
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -83,6 +79,15 @@
 			<version>0.9.1</version>
 		</dependency>
 
+		<!--	Stomp and Messaging protocol	-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-messaging</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

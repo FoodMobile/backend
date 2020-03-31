@@ -14,11 +14,5 @@ public class User extends Entity {
     private String phone;
     private String userType;
 
-    public User(){
-        super();
-    }
 
-    public User(Document doc) {
-        super(doc);
-    }
 }
