@@ -8,6 +8,8 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.server.HandshakeFailureException;
+import org.springframework.web.socket.server.HandshakeHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.util.Map;
@@ -18,14 +20,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private SocketInterceptor socketInterceptor = new SocketInterceptor();
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/truckslive");
+        registry.enableSimpleBroker("/topic/","/queue/");
         registry.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/locations").addInterceptors(this.socketInterceptor);
-        registry.addEndpoint("/locations").withSockJS().setInterceptors(this.socketInterceptor);
+        registry.addEndpoint("/websocket").addInterceptors(socketInterceptor);
+        registry.addEndpoint("/sockjs").addInterceptors(socketInterceptor).withSockJS();
+        //registry.addEndpoint("/locations").addInterceptors(this.socketInterceptor).withSockJS();
     }
 }
 

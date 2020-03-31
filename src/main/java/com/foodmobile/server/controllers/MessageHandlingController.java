@@ -2,6 +2,8 @@ package com.foodmobile.server.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -12,9 +14,11 @@ public class MessageHandlingController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/locations")
-    private void receivedLocationUpdate(Principal principal, Object message){
+    @MessageMapping("/news")
+    @SendTo("/topic/news")
+    private String receivedLocationUpdate(@Payload String message){
         System.out.print(message);
+        return message;
     }
 
 }
