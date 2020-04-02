@@ -1,46 +1,19 @@
 package com.foodmobile.server.websocket;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.server.HandshakeFailureException;
-import org.springframework.web.socket.server.HandshakeHandler;
-import org.springframework.web.socket.server.HandshakeInterceptor;
-
-import java.util.Map;
+import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    private SocketInterceptor socketInterceptor = new SocketInterceptor();
+@EnableWebSocket
+@ComponentScan("com.foodmobile.server.websocket")
+public class WebSocketConfig implements WebSocketConfigurer {
+
+    private TextMessageHandler myWebSocketHandler = new TextMessageHandler();
+    private SocketInterceptor interceptor = new SocketInterceptor();
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic/","/queue/");
-        registry.setApplicationDestinationPrefixes("/app");
-    }
-
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket").addInterceptors(socketInterceptor);
-        registry.addEndpoint("/sockjs").addInterceptors(socketInterceptor).withSockJS();
-        //registry.addEndpoint("/locations").addInterceptors(this.socketInterceptor).withSockJS();
-    }
-}
-
-class SocketInterceptor implements HandshakeInterceptor {
-
-    @Override
-    public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
-        throw new Exception("Jonathan read their JWT from the auth header and make sure its valid");
-    }
-
-    @Override
-    public void afterHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Exception e) {
-
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
+        webSocketHandlerRegistry.addHandler(myWebSocketHandler,"/name").addInterceptors(interceptor).setAllowedOrigins("*");
     }
 }

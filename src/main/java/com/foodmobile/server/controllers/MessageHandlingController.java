@@ -11,14 +11,7 @@ import java.security.Principal;
 
 @Controller
 public class MessageHandlingController {
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/news")
-    @SendTo("/topic/news")
-    private String receivedLocationUpdate(@Payload String message){
-        System.out.print(message);
-        return message;
-    }
+
 
 }
