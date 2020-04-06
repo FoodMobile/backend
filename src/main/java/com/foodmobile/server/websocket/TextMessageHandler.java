@@ -49,6 +49,8 @@ public class TextMessageHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+        // remove the user
+        //this.usConnections.removeNode();
     }
 }
 
