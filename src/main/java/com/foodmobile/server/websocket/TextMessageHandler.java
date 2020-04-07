@@ -21,7 +21,7 @@ public class TextMessageHandler extends TextWebSocketHandler {
         this.senderThread.setDaemon(true);
         this.senderThread.start();
     }
-    Quad usConnections = new Quad(new Rect(-128,49,61,24));
+    public final Quad usConnections = new Quad(new Rect(-128,49,61,24));
 
 
     public void queueUpdate(LocationUpdate update){
@@ -39,24 +39,11 @@ public class TextMessageHandler extends TextWebSocketHandler {
         }
     }
 
-//    @Override
-//    protected void handleTextMessage(WebSocketSession session, TextMessage message)
-//            throws Exception {
-//
-//        String clientMessage = message.getPayload();
-//        // get lat and lon from message
-//        var lat = -128;
-//        var lon = 49;
-//        // Send to all people in the surrounding area. We will change this to be able to be used in other parts of the server (rest requests etc.)
-//        // but for now this is an example of functionality.
-//        this.usConnections.broadCast(lat,lon,message);
-//
-//    }
-
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
-        //get user and location from JWT, maybe actually just add the user to the node
+        // TODO: change this to use the location of the user equated with this session. See com.foodmobile.server.websocket.SocketInterceptor to intercept the websocket
+        // Example:
         var lat = -128 ;// dummy value
         var lon = 49;// dummy value
         var node = new Node(session,lat,lon);

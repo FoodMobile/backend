@@ -2,11 +2,13 @@ package com.foodmobile.server.persistence.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.foodmobile.server.util.JsonSerializer;
 import com.foodmobile.server.util.PointLike;
 import com.foodmobile.server.websocket.TextMessageConvertible;
 import org.springframework.web.socket.TextMessage;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LocationUpdate implements PointLike, TextMessageConvertible {
     public double lat;
@@ -38,6 +40,13 @@ public class LocationUpdate implements PointLike, TextMessageConvertible {
 
     @Override
     public void fromTextMessage(TextMessage message) {
-
+        var payloadStr = message.getPayload();
+        JsonSerializer.deserialize(payloadStr,Map.class).ifPresent(map ->{
+            try {
+                this.id = (String) map.getOrDefault("id", null);
+                this.lat = (double)map.getOrDefault("lat",0);
+                this.lon = (double)map.getOrDefault("lon",0);
+            }catch (Exception ex){}
+        });
     }
 }
