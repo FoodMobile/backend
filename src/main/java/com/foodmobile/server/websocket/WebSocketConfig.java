@@ -9,11 +9,9 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocket
 @ComponentScan("com.foodmobile.server.websocket")
 public class WebSocketConfig implements WebSocketConfigurer {
-
-    private TextMessageHandler myWebSocketHandler = new TextMessageHandler();
     private SocketInterceptor interceptor = new SocketInterceptor();
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-        webSocketHandlerRegistry.addHandler(myWebSocketHandler,"/name").addInterceptors(interceptor).setAllowedOrigins("*");
+        webSocketHandlerRegistry.addHandler(TextMessageHandler.shared,"/name").addInterceptors(interceptor).setAllowedOrigins("*");
     }
 }

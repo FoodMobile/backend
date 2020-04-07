@@ -1,5 +1,6 @@
 package com.foodmobile.server.util;
 
+import com.foodmobile.server.persistence.models.LocationUpdate;
 import com.foodmobile.server.websocket.Node;
 
 
@@ -11,7 +12,7 @@ import java.util.List;
 public class Quad {
     private int MAX_NODES_PER_QUADRANT = 4;
     Rect rect;
-    List<Node> nodes = new LinkedList<>();
+    final List<Node> nodes = new LinkedList<>();
     private boolean divided = false;
     Quad topLeft;
     Quad topRight;
@@ -39,7 +40,10 @@ public class Quad {
         }
 
         if(this.nodes.size() < MAX_NODES_PER_QUADRANT){
-            this.nodes.add(n);
+            synchronized (this.nodes) {
+                n.setParent(this);
+                this.nodes.add(n);
+            }
             return true;
         }else{
             if(!this.divided){this.subdivide();this.divided = true;}
@@ -52,34 +56,26 @@ public class Quad {
         }
     }
 
-    public boolean broadCast(double lat, double lon, TextMessage message){
-        if(!this.rect.contains(new PointLike() {
-            @Override
-            public double getX() {
-                return lon;
-            }
-
-            @Override
-            public double getY() {
-                return lat;
-            }
-        })){return false;}
+    public boolean broadCast(LocationUpdate update){
+        if(!this.rect.contains(update)){return false;}
 
         if(this.divided){
             if(this.rect.w <= 1 || this.rect.y <= 1){
                 //send message they are roughly within 69 miles
-                this.nodes.forEach(n -> n.sendMessage(message));
+                this.nodes.forEach(n -> n.sendMessage(update));
             }
-            return this.topLeft.broadCast(lat,lon,message) || this.topRight.broadCast(lat,lon,message) ||
-                    this.botLeft.broadCast(lat,lon,message) || this.botRight.broadCast(lat,lon,message);
+            return this.topLeft.broadCast(update) || this.topRight.broadCast(update) ||
+                    this.botLeft.broadCast(update) || this.botRight.broadCast(update);
         }else{
-            this.nodes.forEach(n -> n.sendMessage(message));
+            this.nodes.forEach(n -> n.sendMessage(update));
             return true;
         }
 
     }
 
     public void removeNode(Node n){
-
+        synchronized (this.nodes) {
+            this.nodes.removeIf(node -> node == n);
+        }
     }
 }
