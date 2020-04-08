@@ -26,6 +26,11 @@
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.10.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
@@ -49,7 +54,6 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -99,5 +103,4 @@
 		</plugins>
 		<finalName>foodmobile-${artifactId}</finalName>
 	</build>
-
 </project>
