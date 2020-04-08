@@ -11,9 +11,9 @@ import java.util.Map;
 public class SocketInterceptor implements HandshakeInterceptor {
 
     @Override
-    public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> attributes) throws Exception {
         throw new Exception("Jonathan implement JWT here to make sure the connection is authenticated");
-        //System.out.println(serverHttpRequest.getHeaders());
+        // TODO: put the appropriate user information in the attributes map, this becomes the session state once the websocket has finished the handshake process.
         //return true;
     }
 
