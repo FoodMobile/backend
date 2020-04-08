@@ -2,7 +2,7 @@ package com.foodmobile.server.websocket;
 
 import com.foodmobile.server.events.Event;
 import com.foodmobile.server.events.EventHandler;
-import com.foodmobile.server.persistence.models.LocationUpdate;
+import com.foodmobile.server.datamodels.LocationUpdate;
 import com.foodmobile.server.util.PointLike;
 import com.foodmobile.server.util.Quad;
 import org.springframework.web.socket.WebSocketSession;
@@ -16,6 +16,16 @@ public class Node implements PointLike {
     private String user_id = null;
 
     private String sessionId = null;
+
+    // Testing only
+    public static Node getTestNode( double lat, double lon){
+        return new Node(lat,lon);
+    }
+
+    private Node(double lat, double lon){
+        this.lat = lat;
+        this.lon = lon;
+    }
 
     public Node(WebSocketSession session, double lat, double lon) throws Exception {
         this.lat = lat;
@@ -43,6 +53,7 @@ public class Node implements PointLike {
     }
 
     public void sendMessage(TextMessageConvertible message){
+        if(this.session == null){return;}
         try {
             this.session.sendMessage(message.toTextMessage());
         } catch (Exception e) {
