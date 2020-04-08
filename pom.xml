@@ -65,12 +65,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!--	Database Library	-->
-		<dependency>
-			<groupId>org.foodmobile</groupId>
-			<artifactId>databaselib</artifactId>
-			<version>1.2</version>
-		</dependency>
 
 		<!-- Security and JWT-->
 <!--		<dependency>-->
@@ -88,6 +82,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
+		
+        <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
 
 	</dependencies>
 
