@@ -1,10 +1,8 @@
 package com.foodmobile.server.util;
 
-import com.foodmobile.server.persistence.models.LocationUpdate;
+import com.foodmobile.server.datamodels.LocationUpdate;
 import com.foodmobile.server.websocket.Node;
 
-
-import org.springframework.web.socket.TextMessage;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +46,7 @@ public class Quad {
             return false;
         }
 
-        if(this.nodes.size() < MAX_NODES_PER_QUADRANT){
+        if(this.nodes.size() < MAX_NODES_PER_QUADRANT && !this.divided){
             synchronized (this.nodes) {
                 n.setParent(this);
                 this.nodes.add(n);
@@ -71,12 +69,16 @@ public class Quad {
         if(this.divided){
             if(this.rect.w <= 1 || this.rect.y <= 1){
                 //send message they are roughly within 69 miles
-                this.nodes.forEach(n -> n.sendMessage(update));
+                synchronized (this.nodes) {
+                    this.nodes.forEach(n -> n.sendMessage(update));
+                }
             }
             return this.topLeft.broadCast(update) || this.topRight.broadCast(update) ||
                     this.botLeft.broadCast(update) || this.botRight.broadCast(update);
         }else{
-            this.nodes.forEach(n -> n.sendMessage(update));
+            synchronized (this.nodes) {
+                this.nodes.forEach(n -> n.sendMessage(update));
+            }
             return true;
         }
 
@@ -92,6 +94,32 @@ public class Quad {
             }
         }
         return true;
+    }
+
+    public long getNodeCount(){
+        long i = this.nodes.size();
+        if(this.divided){
+            i+= this.topLeft.getNodeCount();
+            i+= this.topRight.getNodeCount();
+            i+= this.botLeft.getNodeCount();
+            i+= this.botRight.getNodeCount();
+        }
+        return i;
+    }
+
+    public long getNodeCountForQuadrant(short qn)throws Exception{
+        if(this.divided){
+            if(qn == 1){
+                return this.topLeft.getNodeCount();
+            }else if(qn == 2){
+                return this.topRight.getNodeCount();
+            }else if(qn == 3){
+                return this.botRight.getNodeCount();
+            }else if(qn == 4){
+                return this.botLeft.getNodeCount();
+            }
+        }
+        throw new Exception("Tree not divided or improper quadrant provided");
     }
 
     public void removeNode(Node n){

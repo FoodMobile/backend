@@ -6,6 +6,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -16,7 +17,7 @@ public class SocketInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> attributes) throws Exception {
         try {
-            var tokenArr = serverHttpRequest.getHeaders().get("token");
+            var tokenArr = serverHttpRequest.getHeaders().getOrDefault("token",new LinkedList<>());
             if (tokenArr.size() > 0) {
                 var token = tokenArr.get(0);
                 var reader = JsonWebToken.verify(token);
