@@ -7,6 +7,8 @@ import com.foodmobile.databaselib.models.Entity;
 import com.mongodb.client.model.Filters;
 
 import javax.xml.crypto.Data;
+
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +23,8 @@ public class PersistenceWrapper {
     }
 
     public PersistenceWrapper() throws PersistenceException {
-        try {
-            var connectionInfo = new ConnectionInfo();
-            connectionInfo.protocol = "mongodb";
-            connectionInfo.addHost("localhost", 27017, "test", "test");
-            connectionInfo.database = "foodtruck";
-            connectionInfo.useSsl = false;
-            DatabaseAdapter.produceMongoAdapter().connect(connectionInfo);
+        try { 
+            DatabaseAdapter.connectMongo("mongodb+srv://admin:Testing1234!@cluster0-6th5l.mongodb.net/test", "test");
         } catch (Exception ex) {
             throw new PersistenceException("Failed to initialize", ex);
         }
@@ -43,14 +40,14 @@ public class PersistenceWrapper {
         }
     }
 
-    public <T extends Entity> Optional<T> readWhereEqual(String collection, Class<T> tClass, String key, String value) throws PersistenceException {
+    public <T extends Entity, V> Optional<T> readWhereEqual(String collection, Class<T> tClass, String key, V value) throws PersistenceException {
         try {
             MongoQuery query = DatabaseAdapter.produceMongoAdapter().queryFactory();
             query.setCollection(collection);
             query.setFilter(Filters.eq(key, value));
             return DatabaseAdapter.produceMongoAdapter().readOne(query, tClass);
         } catch (Exception ex) {
-            throw new PersistenceException("Failed to read single", ex);
+            throw new PersistenceException("Failed to read single: " + ex.getMessage(), ex);
         }
     }
 

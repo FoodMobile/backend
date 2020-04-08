@@ -1,0 +1,3 @@
+[submodule "databaselib"]
+	path = databaselib
+	url = https://github.com/FoodMobile/databaselib

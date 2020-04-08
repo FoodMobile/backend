@@ -35,7 +35,8 @@ public class DAO implements Closeable {
      * @param username The username that needs their password reset
      * @param oldPassword The old password for the user
      * @param newPassword The new password for the user
-     * @throws Exception if there was an issue communicating with the database or (potentially?) the user does not exist.
+     * @throws AuthenticationException If the provided current password is incorrect.
+     * @throws PersistenceException if there was an issue communicating with the database or (potentially?) the user does not exist.
      */
     public void resetPassword(String username, String oldPassword, String newPassword) throws AuthenticationException, PersistenceException {
         if (validLoginCreds(username, oldPassword)) {

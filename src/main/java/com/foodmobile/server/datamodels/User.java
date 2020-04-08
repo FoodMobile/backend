@@ -16,7 +16,7 @@ public class User extends Entity {
     }
 
     @DBId
-    public ObjectId id;
+    public ObjectId id;    
 
     public String name;
 
