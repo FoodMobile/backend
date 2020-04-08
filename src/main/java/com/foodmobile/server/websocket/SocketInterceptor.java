@@ -20,8 +20,8 @@ public class SocketInterceptor implements HandshakeInterceptor {
             if (tokenArr.size() > 0) {
                 var token = tokenArr.get(0);
                 var reader = JsonWebToken.verify(token);
-                var userId = reader.getInt("id");
-                attributes.put("id", userId);
+                var userId = reader.get("username");
+                attributes.put("username", userId);
                 return true;
             } else {
                 return false;

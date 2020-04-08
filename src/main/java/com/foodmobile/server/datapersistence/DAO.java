@@ -3,6 +3,7 @@ package com.foodmobile.server.datapersistence;
 import com.foodmobile.databaselib.DatabaseAdapter;
 import com.foodmobile.databaselib.adapters.ConnectionInfo;
 import com.foodmobile.databaselib.adapters.MongoQuery;
+import com.foodmobile.databaselib.models.Entity;
 import com.foodmobile.server.auth.AuthenticationException;
 import com.foodmobile.server.datamodels.User;
 import com.foodmobile.server.util.jwt.JsonWebToken;
@@ -50,7 +51,7 @@ public class DAO implements Closeable {
         var user = userByUsername(username);
         if (user.isPresent()) {
             user.get().setPassword(password);
-            persistence.update("users", user.get());
+            persistence.update("User", user.get());
         } else {
             throw new PersistenceException();
         }
@@ -58,10 +59,19 @@ public class DAO implements Closeable {
 
     public void register(String name, String username, String password, String email) throws Exception {
         var user = User.create(name, username, password, email);
-        persistence.create("users", user);
+        persistence.create("User", user);
     }
 
     private Optional<User> userByUsername(String username) throws PersistenceException {
-        return persistence.readWhereEqual("users", User.class, "username", username);
+        return persistence.readWhereEqual("User", User.class, "username", username);
+    }
+
+    public <T extends Entity> Optional<T> byGuid(String guid, Class<T> tClass) throws PersistenceException {
+        var className = tClass.getSimpleName();
+        return (Optional<T>)persistence.readWhereEqual(className, tClass, "guid", guid);
+    }
+
+    public <T extends Entity> void create(T t) throws PersistenceException {
+        persistence.create(t.getClass().getSimpleName(), t);
     }
 }

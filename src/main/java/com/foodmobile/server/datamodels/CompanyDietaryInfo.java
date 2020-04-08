@@ -5,8 +5,10 @@ import com.foodmobile.databaselib.annotations.DBId;
 import org.bson.types.ObjectId;
 
 public class CompanyDietaryInfo {
-    @DBId
-    public ObjectId id;
+    /*
+    public static CompanyDietaryInfo create(boolean hasGMO, boolean hasGF, boolean onlyGMO, boolean onlyGF, boolean usesNuts, boolean veganOptions, boolean onlyVegan, String genreGuid, )
+*/
+    public String guid;
 
     public boolean hasGMO;
 
@@ -22,7 +24,7 @@ public class CompanyDietaryInfo {
 
     public boolean onlyVegan;
 
-    public FoodGenre genre;
+    public String genreGuid;
 
-    public Company company;
+    public String companyGuid;
 }

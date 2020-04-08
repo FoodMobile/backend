@@ -4,10 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.foodmobile.databaselib.annotations.DBId;
+import com.foodmobile.databaselib.models.Entity;
 
 import org.bson.types.ObjectId;
 
-public class Transaction {
+public class Transaction extends Entity {
     public static Transaction usdNow(double amount, Company business, User customer) {
         int amountInt = (int)Math.round(amount*100);
         int primary = amountInt/100;
@@ -28,8 +29,7 @@ public class Transaction {
         return trans;
     }
     
-    @DBId
-    public ObjectId id;
+    public String guid;
 
     public String currencyCode;
 

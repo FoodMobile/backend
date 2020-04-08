@@ -1,12 +1,12 @@
 package com.foodmobile.server.datamodels;
 
 import com.foodmobile.databaselib.annotations.DBId;
+import com.foodmobile.databaselib.models.Entity;
 
 import org.bson.types.ObjectId;
 
-public class MenuItem {
-    @DBId
-    public ObjectId id;
+public class MenuItem extends Entity{
+    public String guid;
 
     public String[] ingredients;
 

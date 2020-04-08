@@ -1,13 +1,15 @@
 package com.foodmobile.server.datamodels;
 
-import com.foodmobile.databaselib.annotations.DBId;
-import com.foodmobile.databaselib.models.Entity;
+import java.util.UUID;
+
 import com.foodmobile.server.util.PasswordHasher;
+import com.foodmobile.databaselib.models.Entity;
 import org.bson.types.ObjectId;
 
 public class User extends Entity {
     public static User create(String name, String username, String password, String email) {
         var user = new User();
+        user.guid = UUID.randomUUID().toString();
         user.name = name;
         user.username = username;
         user.email = email;
@@ -15,8 +17,7 @@ public class User extends Entity {
         return user;
     }
 
-    @DBId
-    public ObjectId id;    
+    public String guid;
 
     public String name;
 
