@@ -1,24 +1,24 @@
 package com.foodmobile.server.util;
 
-import com.foodmobile.server.datamodels.LocationUpdate;
-import com.foodmobile.server.websocket.Node;
-
 
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Implementation of a QuadTree
+ */
 public class Quad {
     protected int MAX_NODES_PER_QUADRANT = 4;
-    Rect rect;
+    private Rect rect;
     private final Hashtable<String,Node> connectedNodes = new Hashtable<>();
-    final List<Node> nodes = new LinkedList<>();
+    private final List<Node> nodes = new LinkedList<>();
     private boolean divided = false;
-    Quad parent = null;
-    Quad topLeft;
-    Quad topRight;
-    Quad botLeft;
-    Quad botRight;
+    private Quad parent = null;
+    private Quad topLeft;
+    private Quad topRight;
+    private Quad botLeft;
+    private Quad botRight;
 
     public Quad(Rect rect){
         this.rect = rect;
@@ -118,26 +118,6 @@ public class Quad {
         return false;
     }
 
-//    public boolean broadCast(LocationUpdate update){
-//        if(!this.rect.contains(update)){return false;}
-//
-//        if(this.divided){
-//            if(this.rect.w <= 1 || this.rect.y <= 1){
-//                //send message they are roughly within 69 miles
-//                synchronized (this.nodes) {
-//                    this.nodes.forEach(n -> n.sendMessage(update));
-//                }
-//            }
-//            return this.topLeft.broadCast(update) || this.topRight.broadCast(update) ||
-//                    this.botLeft.broadCast(update) || this.botRight.broadCast(update);
-//        }else{
-//            synchronized (this.nodes) {
-//                this.nodes.forEach(n -> n.sendMessage(update));
-//            }
-//            return true;
-//        }
-//
-//    }
 
     public boolean restructureNode(Node n){
         if(!this.nodes.contains(n)){return false;}else{this.nodes.remove(n);}

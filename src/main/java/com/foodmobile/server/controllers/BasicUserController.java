@@ -8,7 +8,7 @@ import com.foodmobile.server.util.Quad;
 import com.foodmobile.server.util.Rect;
 import com.foodmobile.server.util.jwt.JsonWebToken;
 
-import com.foodmobile.server.websocket.Node;
+import com.foodmobile.server.util.Node;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -30,7 +30,7 @@ public class BasicUserController {
 
     Quad usConnections = new Quad(new Rect(-128,49,61,24));
 
-    @PostMapping("trucklocation")
+    @PostMapping(value = "trucklocation",produces = "application/json")
     public SimpleStatusResponse updateLocation(ServerHttpRequest  serverHttpRequest, ServerHttpResponse response, LocationUpdate update){
        var tokens = serverHttpRequest.getHeaders().getOrDefault("token",new LinkedList<>());
        if( tokens.size() > 0){
@@ -51,7 +51,7 @@ public class BasicUserController {
 
     }
 
-    @GetMapping("nearbytrucks")
+    @GetMapping(path="nearbytrucks",produces = "application/json")
     public List<Node> getLocations(double lat, double lon){
         List<Node> nodes = new LinkedList<>();
         var p = new PointLike() {
@@ -69,7 +69,7 @@ public class BasicUserController {
         return nodes;
     }
 
-    @PostMapping("offline")
+    @PostMapping(path="offline",produces = "application/json")
     private SimpleStatusResponse goOffline(ServerHttpRequest request,ServerHttpResponse response){
         var tokens = request.getHeaders().getOrDefault("token",new LinkedList<>());
         if(tokens.size() > 0){

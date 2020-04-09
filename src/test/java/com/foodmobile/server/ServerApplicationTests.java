@@ -1,14 +1,13 @@
 package com.foodmobile.server;
 
 
-import com.foodmobile.server.datamodels.Company;
 import com.foodmobile.server.datamodels.User;
 import com.foodmobile.server.datapersistence.DAO;
 import com.foodmobile.server.util.PasswordHasher;
 import com.foodmobile.server.util.PointLike;
 import com.foodmobile.server.util.Quad;
 import com.foodmobile.server.util.Rect;
-import com.foodmobile.server.websocket.Node;
+import com.foodmobile.server.util.Node;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -37,10 +36,8 @@ class DemoPoint implements PointLike{
 
 @SpringBootTest
 class ServerApplicationTests {
+	// Box containing the United States (except Alaska and Hawaii)
 	Quad usConnections = new Quad(new Rect(-128,49,61,24));
-	@Test
-	void contextLoads() {
-	}
 
 	@Test
 	void testAll() throws Exception{
@@ -70,9 +67,14 @@ class ServerApplicationTests {
 		usConnections.insert(new Node("e",-128,49));// Q1
 		usConnections.insert(new Node("f",-90,30));// Q3
 
-		assert (usConnections.getNodeCount() == 12);
-		assert (usConnections.getNodeCountForQuadrant((short) 1) == 6);
+		usConnections.insert(new Node("g",-128,49));// Q1
+		usConnections.insert(new Node("h",-128,49));// Q1
+		usConnections.insert(new Node("i",-128,49));// Q1
+		usConnections.insert(new Node("j",-128,49));// Q1
+		assert (usConnections.getNodeCount() == 16);
+		assert (usConnections.getNodeCountForQuadrant((short) 1) == 10);
 		assert (usConnections.getNodeCountForQuadrant((short) 3) == 6);
+		assert(usConnections.isQuadrantDivided(1));
 	}
 
 	@Test
@@ -106,7 +108,7 @@ class ServerApplicationTests {
 
 	@Test
 	void testDestroyDivision(){
-		// Remove all but 3 in Q1
+		// Remove 3 from Q1, this leaves 7 nodes which is less that the max number of nodes for Q1 so any sub-quadrants should be destroyed.
 		assert(usConnections.remove("andyslucky") &&
 		usConnections.remove("asdf") &&
 		usConnections.remove("a4"));
