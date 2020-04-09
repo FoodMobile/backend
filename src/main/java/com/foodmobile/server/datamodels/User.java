@@ -34,4 +34,13 @@ public class User extends Entity {
     public boolean passwordMatches(String password) {
         return passwordHash.trim().equals(PasswordHasher.hash(password.trim()));
     }
+
+    public static boolean usersAreEqual(User a, User b){
+        return a.name.equals(b.name) &&
+                a.email.equals(b.email) &&
+                a.passwordHash.equals(b.passwordHash) &&
+                a.guid.equals(b.guid) &&
+                a.username.equals(b.username);
+    }
+
 }

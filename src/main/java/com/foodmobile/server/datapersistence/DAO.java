@@ -74,4 +74,7 @@ public class DAO implements Closeable {
     public <T extends Entity> void create(T t) throws PersistenceException {
         persistence.create(t.getClass().getSimpleName(), t);
     }
+    public Optional<User> getUserByUsername(String username) throws PersistenceException{
+        return this.userByUsername(username);
+    }
 }
