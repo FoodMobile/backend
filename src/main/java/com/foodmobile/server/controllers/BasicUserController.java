@@ -68,4 +68,24 @@ public class BasicUserController {
         usConnections.search(p,nodes);
         return nodes;
     }
+
+    @PostMapping("offline")
+    private SimpleStatusResponse goOffline(ServerHttpRequest request,ServerHttpResponse response){
+        var tokens = request.getHeaders().getOrDefault("token",new LinkedList<>());
+        if(tokens.size() > 0){
+            try{
+            var token = JsonWebToken.verify(tokens.get(0));
+            var username = token.get("username");
+            usConnections.remove(username);
+            return SimpleStatusResponse.success();
+            }catch (Exception ex){
+                response.setStatusCode(HttpStatus.FORBIDDEN);
+                return SimpleStatusResponse.failure("Token is invalid!");
+            }
+
+        }else{
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return SimpleStatusResponse.failure("No authorization token provided!");
+        }
+    }
 }
