@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Quad {
-    private int MAX_NODES_PER_QUADRANT = 4;
+    protected int MAX_NODES_PER_QUADRANT = 4;
     Rect rect;
     private final Hashtable<String,Node> connectedNodes = new Hashtable<>();
     final List<Node> nodes = new LinkedList<>();
@@ -29,10 +29,7 @@ public class Quad {
     }
     private Quad(Rect rect, Quad parent){
         this.rect = rect;
-        if(this.rect.w <= 1 || this.rect.h <= 1){
-            // This level is so small that we shouldn't be subdividing too much.
-            MAX_NODES_PER_QUADRANT = 100;
-        }
+        MAX_NODES_PER_QUADRANT = parent.MAX_NODES_PER_QUADRANT*2;
         this.parent = parent;
     }
 
@@ -77,7 +74,7 @@ public class Quad {
     }
 
     public boolean remove(String username){
-        if(this.connectedNodes.contains(username)){
+        if(this.connectedNodes.containsKey(username)){
             var node = this.connectedNodes.remove(username);
             node.removeFromParent();
             return true;
@@ -101,6 +98,24 @@ public class Quad {
         }else{
             list.addAll(this.nodes);
         }
+    }
+
+    public boolean isDivided(){
+        return this.divided;
+    }
+
+    public boolean isQuadrantDivided(int i){
+        if(!this.divided){return false;}
+        if(i == 1){
+            return topLeft.divided;
+        }else if(i == 2){
+            return topRight.divided;
+        }else if(i == 3){
+            return botRight.divided;
+        }else if(i == 4){
+            return botLeft.divided;
+        }
+        return false;
     }
 
 //    public boolean broadCast(LocationUpdate update){
@@ -166,6 +181,30 @@ public class Quad {
     public void removeNode(Node n){
         synchronized (this.nodes) {
             this.nodes.removeIf(node -> node == n);
+        }
+        if(this.parent != null && this.parent.getNodeCount() < this.parent.MAX_NODES_PER_QUADRANT){
+            this.parent.destroyDivision(parent);
+        }
+    }
+
+    private void destroyDivision(Quad newParent){
+        if(!this.divided){
+            while(this.nodes.size() > 0){
+                var node = this.nodes.remove(0);
+                newParent.insert(node,false);
+            }
+
+        }else{
+            this.divided = false;
+            this.topLeft.destroyDivision(newParent);
+            this.topRight.destroyDivision(newParent);
+            this.botLeft.destroyDivision(newParent);
+            this.botRight.destroyDivision(newParent);
+            this.topLeft = null;
+            this.topRight = null;
+            this.botLeft = null;
+            this.botRight = null;
+
         }
     }
 }

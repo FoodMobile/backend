@@ -37,41 +37,80 @@ class DemoPoint implements PointLike{
 
 @SpringBootTest
 class ServerApplicationTests {
-
+	Quad usConnections = new Quad(new Rect(-128,49,61,24));
 	@Test
 	void contextLoads() {
 	}
 
 	@Test
-	void testQtree() throws Exception{
+	void testAll() throws Exception{
+		testDivision();
+		testSearch();
+		testMoving();
+		testDestroyDivision();
+	}
 
-		Quad usConnections = new Quad(new Rect(-128,49,61,24));
+	@Test
+	void testDivision() throws Exception{
+		usConnections.insert(new Node("andyslucky",-127.123,48.9375));// Q1
+		usConnections.insert(new Node("asdf",-90.865,30.3211));// Q3
 
-		usConnections.insert(new Node("andyslucky",-128,49));// Q1
-		usConnections.insert(new Node("asdf",-90,30));// Q2
-
-		usConnections.insert(new Node("asdfasdf",-128,49));// Q1
-		usConnections.insert(new Node("123",-90,30));// Q2
+		usConnections.insert(new Node("asdfasdf",-127.8896,49));// Q1
+		usConnections.insert(new Node("123",-90,30));// Q3
 
 		usConnections.insert(new Node("a4",-128,49));// Q1
-		usConnections.insert(new Node("58",-90,30));// Q2
+		usConnections.insert(new Node("58",-90,30));// Q3
 
-		assert (usConnections.getNodeCount() == 6);
-		assert (usConnections.getNodeCountForQuadrant((short) 1) == 3);
-		assert (usConnections.getNodeCountForQuadrant((short) 3) == 3);
-		PointLike p = new DemoPoint(-89,31);
+		usConnections.insert(new Node("a",-127.123,48.9375));// Q1
+		usConnections.insert(new Node("b",-90.865,30.3211));// Q3
+
+		usConnections.insert(new Node("c",-127.8896,49));// Q1
+		usConnections.insert(new Node("d",-90,30));// Q3
+
+		usConnections.insert(new Node("e",-128,49));// Q1
+		usConnections.insert(new Node("f",-90,30));// Q3
+
+		assert (usConnections.getNodeCount() == 12);
+		assert (usConnections.getNodeCountForQuadrant((short) 1) == 6);
+		assert (usConnections.getNodeCountForQuadrant((short) 3) == 6);
+	}
+
+	@Test
+	void testSearch(){
+		PointLike p = new DemoPoint(-89,31);//Q3
 		var list = new LinkedList<Node>();
 		usConnections.search(p,list);
-		assert(list.size() == 3);
+		assert(list.size() == 6);
+		assert(list.stream().allMatch(n-> n.username.equals("asdf") || n.username.equals("123") || n.username.equals("58") || n.username.equals("b") || n.username.equals("d") || n.username.equals("f")));
 		list = new LinkedList<Node>();
-		p = new DemoPoint(-128,30);
+		p = new DemoPoint(-128,30);//Q4
 		usConnections.search(p,list);
 		assert(list.size() == 0);
-		usConnections.insert(new Node("asdfasdf",-128,30));
-		assert(usConnections.getNodeCount() == 6);
+	}
+
+	@Test
+	void testMoving(){
+
+		var originalSize = usConnections.getNodeCount();
+
+
+		usConnections.insert(new Node("asdfasdf",-128,30));//move to Q4
+
+		PointLike p = new DemoPoint(-127.00123,31.569);// Q4
+		var list = new LinkedList<Node>();
+		assert(usConnections.getNodeCount() == originalSize);
+
 		usConnections.search(p,list);
-		assert(list.size() == 1);
-		System.out.println(list);
+		assert(list.size() == 1);//SIze of Q4 should be 1
+	}
+
+	@Test
+	void testDestroyDivision(){
+		// Remove all but 3 in Q1
+		assert(usConnections.remove("andyslucky") &&
+		usConnections.remove("asdf") &&
+		usConnections.remove("a4"));
+		assert(!usConnections.isQuadrantDivided(1));
 	}
 
 
