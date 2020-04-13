@@ -20,6 +20,48 @@ public class AuthControllerTests {
     }
 
     @Test
+    public void userInfoTest() {
+        var username = UUID.randomUUID().toString();
+        var password = UUID.randomUUID().toString();
+        var email = String.format("%s@gmail.com", UUID.randomUUID().toString());
+        var regResponse = auth.registerNormal("Joe Shmoe", username, password, email);
+        assertTrue(regResponse.success);
+        var infoResponse = auth.userInfo(username);
+        assertTrue(infoResponse.success);
+    }
+
+    @Test
+    public void shortPasswordTest() {
+        var username = UUID.randomUUID().toString();
+        var email = String.format("%s@gmail.com", UUID.randomUUID().toString());
+        var regResponse = auth.registerNormal("Joe Shmoe", username, "cat", email);
+        assertFalse(regResponse.success);
+    }
+
+    @Test
+    public void invalidEmailTest() {
+        var username = UUID.randomUUID().toString();
+        var email = String.format("%s", UUID.randomUUID().toString());
+        var regResponse = auth.registerNormal("Joe Shmoe", username, "superlongpassword", email);
+        assertFalse(regResponse.success);
+        var username2 = UUID.randomUUID().toString();
+        var email2 = String.format("%s@gmail", UUID.randomUUID().toString());
+        var regResponse2 = auth.registerNormal("Joe Shmoe", username, "superlongpassword", email);
+        assertFalse(regResponse2.success);
+    }
+
+    @Test
+    public void userInfoNoPasswordTest() {
+        var username = UUID.randomUUID().toString();
+        var password = UUID.randomUUID().toString();
+        var email = String.format("%s@gmail.com", UUID.randomUUID().toString());
+        var regResponse = auth.registerNormal("Joe Shmoe", username, password, email);
+        assertTrue(regResponse.success);
+        var infoResponse = auth.userInfo(username);
+        assertEquals(infoResponse.data.passwordHash, "");
+    }
+
+    @Test
     public void invalidPasswordTest() {
         var username = UUID.randomUUID().toString();
         var password = UUID.randomUUID().toString();

@@ -24,7 +24,7 @@ public class PersistenceWrapper {
 
     public PersistenceWrapper() throws PersistenceException {
         try { 
-            DatabaseAdapter.connectMongo("mongodb://localhost", "foodmobile");
+            DatabaseAdapter.connectMongo("mongodb+srv://admin:Testing1234!@cluster0-6th5l.mongodb.net/test?retryWrites=true&w=majority", "foodmobile");
         } catch (Exception ex) {
             throw new PersistenceException("Failed to initialize", ex);
         }

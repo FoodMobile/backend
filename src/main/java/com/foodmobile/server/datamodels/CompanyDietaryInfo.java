@@ -6,7 +6,7 @@ import com.foodmobile.databaselib.models.Entity;
 import org.bson.types.ObjectId;
 
 public class CompanyDietaryInfo extends BaseDataModel {
-    public static CompanyDietaryInfo create(boolean hasGMO, boolean hasGF, boolean onlyGMO, boolean onlyGF, boolean usesNuts, boolean veganOptions, boolean onlyVegan, String genreGuid, String companyGuid) {
+    public static CompanyDietaryInfo create(boolean hasGMO, boolean hasGF, boolean onlyGMO, boolean onlyGF, boolean usesNuts, boolean veganOptions, boolean onlyVegan, String genreGuid) {
         var dietaryInfo = new CompanyDietaryInfo();
         dietaryInfo.hasGMO = hasGMO;
         dietaryInfo.hasGF = hasGF;
@@ -16,7 +16,6 @@ public class CompanyDietaryInfo extends BaseDataModel {
         dietaryInfo.veganOptions = veganOptions;
         dietaryInfo.onlyVegan = onlyVegan;
         dietaryInfo.genreGuid = genreGuid;
-        dietaryInfo.companyGuid = companyGuid;
         return dietaryInfo;
     }
 
@@ -36,6 +35,4 @@ public class CompanyDietaryInfo extends BaseDataModel {
     public boolean onlyVegan;
 
     public String genreGuid;
-
-    public String companyGuid;
 }
