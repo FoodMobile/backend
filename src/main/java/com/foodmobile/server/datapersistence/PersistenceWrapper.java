@@ -40,6 +40,17 @@ public class PersistenceWrapper {
         }
     }
 
+    public <T extends Entity, V> void deleteWhereEqual(String collection, Class<T> tClass, String key, V value) throws PersistenceException {
+        try {
+            MongoQuery query = DatabaseAdapter.produceMongoAdapter().queryFactory();
+            query.setCollection(collection);
+            query.setFilter(Filters.eq(key, value));
+            DatabaseAdapter.produceMongoAdapter().deleteMany(query);
+        } catch (Exception ex) {
+            throw new PersistenceException("Failed to delete");
+        }
+    }
+
     public <T extends Entity, V> Optional<T> readWhereEqual(String collection, Class<T> tClass, String key, V value) throws PersistenceException {
         try {
             MongoQuery query = DatabaseAdapter.produceMongoAdapter().queryFactory();

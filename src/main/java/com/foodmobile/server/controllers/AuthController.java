@@ -1,7 +1,5 @@
 package com.foodmobile.server.controllers;
 
-
-
 import com.foodmobile.server.datamodels.LoginResponse;
 import com.foodmobile.server.datamodels.SimpleStatusResponse;
 import com.foodmobile.server.datapersistence.DAO;

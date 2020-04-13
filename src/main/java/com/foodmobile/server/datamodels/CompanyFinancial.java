@@ -5,7 +5,7 @@ import com.foodmobile.databaselib.models.Entity;
 
 import org.bson.types.ObjectId;
 
-public class CompanyFinancial extends Entity {
+public class CompanyFinancial extends BaseDataModel {
 
     public static CompanyFinancial create(String ein, String stateCode, String country) {
         var companyFin = new CompanyFinancial();
@@ -14,8 +14,6 @@ public class CompanyFinancial extends Entity {
         companyFin.country = country;
         return companyFin;
     }
-
-    public String guid;
 
     public String ein;
 

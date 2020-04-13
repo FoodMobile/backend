@@ -8,7 +8,7 @@ import com.foodmobile.databaselib.models.Entity;
 
 import org.bson.types.ObjectId;
 
-public class Transaction extends Entity {
+public class Transaction extends BaseDataModel {
     public static Transaction usdNow(double amount, Company business, User customer) {
         int amountInt = (int)Math.round(amount*100);
         int primary = amountInt/100;
@@ -28,8 +28,6 @@ public class Transaction extends Entity {
         trans.transactionTime = String.format("%02d:%02d", now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
         return trans;
     }
-    
-    public String guid;
 
     public String currencyCode;
 

@@ -6,7 +6,7 @@ import com.foodmobile.server.util.PasswordHasher;
 import com.foodmobile.databaselib.models.Entity;
 import org.bson.types.ObjectId;
 
-public class User extends Entity {
+public class User extends BaseDataModel {
     public static User create(String name, String username, String password, String email) {
         var user = new User();
         user.guid = UUID.randomUUID().toString();
@@ -16,8 +16,6 @@ public class User extends Entity {
         user.setPassword(password);
         return user;
     }
-
-    public String guid;
 
     public String name;
 

@@ -1,14 +1,22 @@
 package com.foodmobile.server.datamodels;
 
+import java.util.UUID;
+
 import com.foodmobile.databaselib.annotations.DBId;
 import com.foodmobile.databaselib.models.Entity;
 
 import org.bson.types.ObjectId;
 
-public class Truck extends Entity {
-    public String guid;
+public class Truck extends BaseDataModel {
+    public static Truck create(String companyGuid, String associatedGuid) {
+        var truck = new Truck();
+        truck.guid = UUID.randomUUID().toString();
+        truck.companyGuid = companyGuid;
+        truck.associatedGuid = associatedGuid;
+        return truck;
+    }
 
-    public Company company;
+    public String companyGuid;
 
-    public User associatedUser;
+    public String associatedGuid;
 }
