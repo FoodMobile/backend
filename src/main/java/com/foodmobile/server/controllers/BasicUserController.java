@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 public class BasicUserController {
-    @GetMapping(path="/profile/update", produces="application/json")
+    @PostMapping(path="/profile/update", produces="application/json")
     public SimpleStatusResponse profileUpdate(@RequestParam String token) {
         // TODO: Decide what content needs to be updated in the profile
         return SimpleStatusResponse.success();
@@ -51,7 +51,7 @@ public class BasicUserController {
 
     }
 
-    @GetMapping(path="nearbytrucks",produces = "application/json")
+    @PostMapping(path="nearbytrucks",produces = "application/json")
     public List<Node> getLocations(double lat, double lon){
         List<Node> nodes = new LinkedList<>();
         var p = new PointLike() {
