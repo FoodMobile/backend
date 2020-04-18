@@ -49,6 +49,12 @@
 			<version>1.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.foodmobile</groupId>
+			<artifactId>databaselib</artifactId>
+			<version>1.1</version>
+		</dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -107,25 +113,6 @@
 				<configuration>
 					<mainClass>com.foodmobile.server.ServerApplication</mainClass>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-						<goal>add-source</goal>
-						</goals>
-						<configuration>
-						<sources>
-							<source>databaselib/src/main/java</source>
-						</sources>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 		<finalName>foodmobile-${artifactId}</finalName>
