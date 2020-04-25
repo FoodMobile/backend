@@ -1,0 +1,10 @@
+com.foodmobile.server
+com.foodmobile.server.auth
+com.foodmobile.server.auth.loginmodels
+com.foodmobile.server.controllers
+com.foodmobile.server.datamodels
+com.foodmobile.server.datapersistence
+com.foodmobile.server.events
+com.foodmobile.server.exceptions
+com.foodmobile.server.util
+com.foodmobile.server.util.jwt
