@@ -97,7 +97,11 @@ public class BusinessController {
     @PostMapping(path="/bus/joincompany", produces="application/json")
     public DataModelResponse<User> joinCompany(@RequestParam String companyGuid, @RequestParam String userGuid) {
         try (var dao = new DAO()) {
-            var user = dao.byGuid(userGuid, User.class);
+            var userOpt = dao.byGuid(userGuid, User.class);
+            if (!userOpt.isPresent()) {
+                return DataModelResponse.failure("No such user.");
+            }
+            var user = userOpt.get();
             user.companyGuid = companyGuid;
             dao.update(user);
             return DataModelResponse.success(user);
