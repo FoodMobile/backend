@@ -36,7 +36,7 @@ public class BusinessController {
         } else {
             return DataModelResponse.failure("Currently only available in the United States");
         }
-        if (ein.replaceAll("[^\\d]+]", "").length() != 9) {
+        if (ein.replaceAll("[^\\d]+", "").length() != 9) {
             return DataModelResponse.failure("Invalid EIN");
         }
         var companyInfo = CompanyFinancial.create(ein, stateCode, country);
