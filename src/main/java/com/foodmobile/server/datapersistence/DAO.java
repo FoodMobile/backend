@@ -82,8 +82,13 @@ public class DAO implements Closeable {
         persistence.deleteWhereEqual(className, tClass, key, value);
     }
 
-    public Truck getTruckByToken(String token) throws PersistenceException {
-        return getTruckByUsername(JsonWebToken.verify(token).get("username"));
+    public Optional<Truck> getTruckByToken(String token) throws PersistenceException {
+        var username = JsonWebToken.verify(token).get("username");
+        var userOpt = userByUsername(username);
+        if (!userOpt.isPresent()) {
+            throw new PersistenceException("No such username");
+        }
+        return getTruckByUserId(userOpt.get().guid);
     }
 
     public Optional<Truck> getTruckByUserId(String userGuid) throws PersistenceException {
