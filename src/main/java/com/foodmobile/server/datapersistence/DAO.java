@@ -86,7 +86,7 @@ public class DAO implements Closeable {
         var username = JsonWebToken.verify(token).get("username");
         var userOpt = userByUsername(username);
         if (!userOpt.isPresent()) {
-            throw new PersistenceException("No such username");
+            throw new PersistenceException("No such user");
         }
         return getTruckByUserId(userOpt.get().guid);
     }

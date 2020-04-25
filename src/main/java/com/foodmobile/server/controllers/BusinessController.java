@@ -144,6 +144,19 @@ public class BusinessController {
         }
     }
 
+    @PostMapping(path="/bus/getloggedintruck", produces="application/json")
+    public DataModelResponse<Truck> truckForCurrentUser(@RequestParam String token) {
+        try (var dao = new DAO()) {
+            var truckOpt = dao.getTruckByToken(token);
+            if (!truckOpt.isPresent()) {
+                return DataModelResponse.failure("No such truck");
+            }
+            return DataModelResponse.success(truckOpt.get());
+        } catch (Exception ex) {
+            return DataModelResponse.failure(ex.getMessage());
+        }
+    }
+
     @PostMapping(path="/bus/gettruckforuser", produces="application/json")
     public DataModelResponse<Truck> truckForUser(@RequestParam String userGuid) {
         try (var dao = new DAO()) {
