@@ -156,6 +156,23 @@ public class BusinessController {
             return DataModelResponse.failure(ex.getMessage());
         }
     }
+    
+    @PostMapping(path="/bus/gettruckforusername", produces="application/json")
+    public DataModelResponse<Truck> truckForUsername(@RequestParam String username) {
+        try (var dao = new DAO()) {
+            var userOpt = dao.getUserByUsername(username);
+            if (!userOpt.isPresent()) {
+                return DataModelResponse.failure("No such user");
+            }
+            var truckOpt = dao.getTruckByUserId(userOpt.get().guid);
+            if (!truckOpt.isPresent()) {
+                return DataModelResponse.failure("No such truck");
+            }
+            return DataModelResponse.success(truckOpt.get());
+        } catch (Exception ex) {
+            return DataModelResponse.failure(ex.getMessage());
+        }
+    }
 
     @PostMapping(path="/bus/gettruckforuser", produces="application/json")
     public DataModelResponse<Truck> truckForUser(@RequestParam String userGuid) {
