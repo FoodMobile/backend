@@ -41,11 +41,6 @@ public class BusinessController {
         }
     }
 
-    @PostMapping(path="/bus/companyinfo", produces="application/json")
-    public DataModelResponse<Company> companyInfo(@RequestParam String username) {
-        
-    }
-    
     @PostMapping(path="/bus/createcompanyfinancial", produces="application/json")
     public DataModelResponse<CompanyFinancial> createCompanyFinancial(@RequestParam String ein, @RequestParam String stateCode, @RequestParam String country) {
         if (country.equalsIgnoreCase("usa")) {
