@@ -14,7 +14,8 @@ public class MenuItem extends BaseDataModel {
             String[] ingredients, String description, String title, 
             boolean glutenFree, boolean noGMOs, boolean cookedNearNuts,
             boolean cookedNearShellfish, boolean containsShellfish,
-            boolean vegan, int primaryPrice, int fractionalPrice) {
+            boolean vegan, int primaryPrice, int fractionalPrice,
+            String businessGuid) {
         var item = new MenuItem();
         item.guid = UUID.randomUUID().toString();
         item.ingredients = Arrays.asList(ingredients);
@@ -28,6 +29,7 @@ public class MenuItem extends BaseDataModel {
         item.vegan = vegan;
         item.primaryPrice = primaryPrice;
         item.fractionalPrice = fractionalPrice;
+        item.businessGuid = businessGuid;
         return item;
     }
 
@@ -54,4 +56,6 @@ public class MenuItem extends BaseDataModel {
     public int primaryPrice;
 
     public int fractionalPrice;
+
+    public String businessGuid;
 }

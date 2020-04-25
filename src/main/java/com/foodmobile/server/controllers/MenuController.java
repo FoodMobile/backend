@@ -27,7 +27,8 @@ public class MenuController {
             @RequestParam boolean containsShellfish,
             @RequestParam boolean vegan,
             @RequestParam int primaryPrice,
-            @RequestParam int fractionalPrice) {
+            @RequestParam int fractionalPrice,
+            @RequestParam String businessGuid) {
         var menuItem = MenuItem.create(
             ingredientsList.split(","),
             description,
@@ -39,7 +40,8 @@ public class MenuController {
             containsShellfish,
             vegan,
             primaryPrice,
-            fractionalPrice
+            fractionalPrice,
+            businessGuid
         );
         try (var dao = new DAO()) {
             dao.create(menuItem);
@@ -80,7 +82,8 @@ public class MenuController {
             @RequestParam boolean containsShellfish,
             @RequestParam boolean vegan,
             @RequestParam int primaryPrice,
-            @RequestParam int fractionalPrice) {
+            @RequestParam int fractionalPrice,
+            @RequestParam String businessGuid) {
         try (var dao = new DAO()) {
             var menuItemOpt = dao.byGuid(guid, MenuItem.class);
             if (menuItemOpt.isEmpty()) {
@@ -97,6 +100,7 @@ public class MenuController {
             menuItem.vegan = vegan;
             menuItem.primaryPrice = primaryPrice;
             menuItem.fractionalPrice = fractionalPrice;
+            menuItem.businessGuid = businessGuid;
             dao.update(menuItem);
             return DataModelResponse.success(menuItem);
         } catch (Exception ex) {

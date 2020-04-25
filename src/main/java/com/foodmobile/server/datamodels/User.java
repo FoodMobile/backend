@@ -25,6 +25,8 @@ public class User extends BaseDataModel {
 
     public String email;
 
+    public String companyGuid;
+
     public void setPassword(String password) {
         passwordHash = PasswordHasher.hash(password.trim());
     }

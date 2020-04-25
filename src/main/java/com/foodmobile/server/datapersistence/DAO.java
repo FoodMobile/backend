@@ -86,8 +86,8 @@ public class DAO implements Closeable {
         return getTruckByUsername(JsonWebToken.verify(token).get("username"));
     }
 
-    public Truck getTruckByUsername(String username) throws PersistenceException {
-        return null;
+    public Truck getTruckByUserId(String userGuid) throws PersistenceException {
+        return byKeyValue(Truck.class, "associatedGuid", userGuid);
     }
 
     public <T extends Entity, V> Optional<T> byKeyValue(Class<T> tClass, String key, V value) throws PersistenceException {

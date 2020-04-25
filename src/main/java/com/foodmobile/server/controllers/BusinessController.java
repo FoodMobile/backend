@@ -6,6 +6,7 @@ import com.foodmobile.server.datamodels.CompanyFinancial;
 import com.foodmobile.server.datamodels.DataModelResponse;
 import com.foodmobile.server.datamodels.FoodGenre;
 import com.foodmobile.server.datamodels.Truck;
+import com.foodmobile.server.datamodels.User;
 import com.foodmobile.server.datapersistence.DAO;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,24 @@ public class BusinessController {
         } catch (Exception ex) {
             return DataModelResponse.failure(ex.getMessage());
         }
+    }
+
+    @PostMapping(path="/bus/companyinfobyid", produces="application/json")
+    public DataModelResponse<Company> companyInfoById(@RequestParam String guid) {
+        try (var dao = new DAO()) {
+            var companyOpt = dao.byGuid(guid, Company.class);
+            if (!companyOpt.isPresent()) {
+                return DataModelResponse.failure("No such company");
+            }
+            return DataModelResponse.success(companyOpt.get());
+        } catch (Exception ex) {
+            return DataModelResponse.failure(ex.getMessage());
+        }
+    }
+
+    @PostMapping(path="/bus/companyinfo", produces="application/json")
+    public DataModelResponse<Company> companyInfo(@RequestParam String username) {
+        
     }
     
     @PostMapping(path="/bus/createcompanyfinancial", produces="application/json")
@@ -80,6 +99,18 @@ public class BusinessController {
         }
     }
 
+    @PostMapping(path="/bus/joincompany", produces="application/json")
+    public DataModelResponse<User> joinCompany(@RequestParam String companyGuid, @RequestParam String userGuid) {
+        try (var dao = new DAO()) {
+            var user = dao.byGuid(userGuid, User.class);
+            user.companyGuid = companyGuid;
+            dao.update(user);
+            return DataModelResponse.success(user);
+        } catch (Exception ex) {
+            return DataModelResponse.failure(ex.getMessage());
+        }
+    }
+
     @PostMapping(path="/bus/updatecompany", produces="application/json")
     public DataModelResponse<Company> updateCompany(@RequestParam String guid, @RequestParam String name, @RequestParam String financialInfo, @RequestParam String dietaryInfo) {
         try (var dao = new DAO()) {
@@ -116,7 +147,11 @@ public class BusinessController {
 
     @PostMapping(path="/bus/gettruckforuser", produces="application/json")
     public DataModelResponse<Truck> truckForUser(@RequestParam String userGuid) {
-        return null;
+        try (var dao = new DAO()) {
+            dao.getTruckByUserId(userGuid);
+        } catch (Exception ex) {
+            return DataModelResponse.failure(ex.getMessage());
+        }
     }
 
 }
