@@ -5,9 +5,12 @@ import com.foodmobile.databaselib.models.Entity;
 
 import org.bson.types.ObjectId;
 
+import java.util.UUID;
+
 public class CompanyDietaryInfo extends BaseDataModel {
     public static CompanyDietaryInfo create(boolean hasGMO, boolean hasGF, boolean onlyGMO, boolean onlyGF, boolean usesNuts, boolean veganOptions, boolean onlyVegan, String genreGuid) {
         var dietaryInfo = new CompanyDietaryInfo();
+        dietaryInfo.guid = UUID.randomUUID().toString();
         dietaryInfo.hasGMO = hasGMO;
         dietaryInfo.hasGF = hasGF;
         dietaryInfo.onlyGMO = onlyGMO;
