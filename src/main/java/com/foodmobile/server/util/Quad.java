@@ -20,6 +20,10 @@ public class Quad {
     private Quad botLeft;
     private Quad botRight;
 
+    /**
+     * Initialize a quad tree with an initial rectangle
+     * @param rect Rectangle specifying the bounds of the tree.
+     */
     public Quad(Rect rect){
         this.rect = rect;
         if(this.rect.w <= 1 || this.rect.h <= 1){
@@ -39,10 +43,22 @@ public class Quad {
         this.botLeft = new Quad(new Rect(this.rect.x,this.rect.y - (0.5*this.rect.h),0.5*this.rect.w,0.5*this.rect.h),this);
         this.botRight = new Quad(new Rect(this.rect.x+(0.5*this.rect.w),this.rect.y - (0.5*this.rect.h),0.5*this.rect.w,0.5*this.rect.h),this);
     }
+
+    /**
+     * Inserts a node forcing updates to any node already present
+     * @param n Node to insert
+     * @return true if the node is inserted else false
+     */
     public boolean insert(Node n){
         return this.insert(n,true);
     }
 
+    /**
+     * Inserts a node into the tree optionally forcing updates.
+     * @param n Node to be inserted
+     * @param shouldUpdate Specifies whether preexisting nodes should be updated based off of the information stored in n.
+     * @return true if the node was inserted else false
+     */
     public boolean insert(Node n, boolean shouldUpdate){
         if(!this.rect.contains(n)){
             return false;
@@ -73,6 +89,11 @@ public class Quad {
         }
     }
 
+    /**
+     * Removes a node with the specified username
+     * @param username Username of the node that should be removed.
+     * @return true if the node was removed else false
+     */
     public boolean remove(String username){
         if(this.connectedNodes.containsKey(username)){
             var node = this.connectedNodes.remove(username);
@@ -82,6 +103,11 @@ public class Quad {
         return false;
     }
 
+    /**
+     * Finds all nodes in a certain region of the tree
+     * @param p Point specifying the region
+     * @param list List reference, populated with the does found by search
+     */
     public void search(PointLike p, List<Node> list){
         if(!this.rect.contains(p)){return;}
         if(this.divided){
@@ -100,10 +126,19 @@ public class Quad {
         }
     }
 
+    /**
+     * Gets if the current tree, or subtree is divided.
+     * @return true if the current tree or subtree is divided.
+     */
     public boolean isDivided(){
         return this.divided;
     }
 
+    /**
+     * Checks if quadrant is divided.
+     * @param i Quadrant number ordered clockwise starting at top left == 1
+     * @return true if the specified quadrant is divided.
+     */
     public boolean isQuadrantDivided(int i){
         if(!this.divided){return false;}
         if(i == 1){
@@ -118,7 +153,11 @@ public class Quad {
         return false;
     }
 
-
+    /**
+     * Restructures a node after it has been updated.
+     * @param n Node to be restructured (replaced in the tree).
+     * @return true if the node was successfully restructured.
+     */
     public boolean restructureNode(Node n){
         if(!this.nodes.contains(n)){return false;}else{this.nodes.remove(n);}
         var tree = this;
@@ -132,6 +171,10 @@ public class Quad {
         return true;
     }
 
+    /**
+     * Gets the number of nodes in the tree
+     * @return number of nodes in tree
+     */
     public long getNodeCount(){
         long i = this.nodes.size();
         if(this.divided){
@@ -143,6 +186,12 @@ public class Quad {
         return i;
     }
 
+    /**
+     * Gets the number of nodes in a quadrant
+     * @param qn quadrant number
+     * @return number of nodes in the specified quadrant.
+     * @throws Exception If tree is not divided, an exception is thrown.
+     */
     public long getNodeCountForQuadrant(short qn)throws Exception{
         if(this.divided){
             if(qn == 1){
@@ -158,6 +207,10 @@ public class Quad {
         throw new Exception("Tree not divided or improper quadrant provided");
     }
 
+    /**
+     * Removes a specific node from the tree.
+     * @param n The node to be removed.
+     */
     public void removeNode(Node n){
         synchronized (this.nodes) {
             this.nodes.removeIf(node -> node == n);
