@@ -2,7 +2,9 @@ package com.foodmobile.server.controllers;
 
 import com.foodmobile.server.datamodels.DataModelResponse;
 import com.foodmobile.server.datamodels.MenuItem;
+import com.foodmobile.server.datamodels.MultiDataModelResponse;
 import com.foodmobile.server.datamodels.SimpleStatusResponse;
+import com.foodmobile.server.datamodels.Truck;
 import com.foodmobile.server.datapersistence.DAO;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,6 +58,30 @@ public class MenuController {
             } catch (Exception ex2) {
                 return null;
             }
+        }
+    }
+
+    @PostMapping(path="/menu/itemsfortruck", produces="application/json")
+    public MultiDataModelResponse<MenuItem> menuForTruck(@RequestParam String truckGuid) {
+        try (var dao = new DAO()) {
+            var truckOpt = dao.byGuid(truckGuid, Truck.class);
+            if (!truckOpt.isPresent()) {
+                return MultiDataModelResponse.failure("No such truck");
+            }
+            var truck = truckOpt.get();
+            var companyGuid = truck.companyGuid;
+            return MultiDataModelResponse.success(dao.allByKeyValue(MenuItem.class, "businessGuid", companyGuid));
+        } catch (Exception ex) {
+            return MultiDataModelResponse.failure(ex.getMessage());
+        }
+    }
+
+    @PostMapping(path="/menu/itemsforcompany", produces="application/json") 
+    public MultiDataModelResponse<MenuItem> menu(@RequestParam String companyGuid) {
+        try (var dao = new DAO()) {
+            return MultiDataModelResponse.success(dao.allByKeyValue(MenuItem.class, "businessGuid", companyGuid));
+        } catch (Exception ex) {
+            return MultiDataModelResponse.failure(ex.getMessage());
         }
     }
 

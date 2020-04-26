@@ -11,6 +11,7 @@ import com.foodmobile.server.datamodels.User;
 import com.foodmobile.server.util.jwt.JsonWebToken;
 
 import java.io.Closeable;
+import java.util.List;
 import java.util.Optional;
 
 public class DAO implements Closeable {
@@ -98,6 +99,11 @@ public class DAO implements Closeable {
     public <T extends Entity, V> Optional<T> byKeyValue(Class<T> tClass, String key, V value) throws PersistenceException {
         var className = tClass.getSimpleName();
         return (Optional<T>)persistence.readWhereEqual(className, tClass, key, value);
+    }
+
+    public <T extends Entity, V> List<T> allByKeyValue(Class<T> tClass, String key, V value) throws PersistenceException {
+        var className = tClass.getSimpleName();
+        return persistence.readAllWhereEqual(className, tClass, key, value);
     }
 
     public <T extends Entity> Optional<T> byGuid(String guid, Class<T> tClass) throws PersistenceException {
