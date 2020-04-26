@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,21 +31,25 @@ public class BasicUserController {
     Quad usConnections = new Quad(new Rect(-128,49,61,24));
 
     @PostMapping(value = "trucklocation",produces = "application/json")
-    public SimpleStatusResponse updateLocation(ServerHttpRequest  serverHttpRequest, ServerHttpResponse response, LocationUpdate update){
-       var tokens = serverHttpRequest.getHeaders().getOrDefault("token",new LinkedList<>());
-       if( tokens.size() > 0){
+    public SimpleStatusResponse updateLocation(HttpServletResponse response, LocationUpdate update){
+
+       if(update.token != null){
            try {
-               var token = JsonWebToken.verify(tokens.get(0));
+               var token = JsonWebToken.verify(update.token);
                var username = token.get("username");
                update.username = username;
                usConnections.insert(new Node(username,update.lat,update.lon));
                return SimpleStatusResponse.success();
            }catch(Exception ex){
-               response.setStatusCode(HttpStatus.FORBIDDEN);
+               if(response != null){
+               response.setStatus(HttpStatus.FORBIDDEN.value());
+               }
                return SimpleStatusResponse.failure("The specified token is invalid!");
            }
        }else{
-           response.setStatusCode(HttpStatus.UNAUTHORIZED);
+           if(response != null) {
+               response.setStatus(HttpStatus.UNAUTHORIZED.value());
+           }
            return SimpleStatusResponse.failure("No authorization token provided!");
        }
 

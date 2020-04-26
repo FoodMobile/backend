@@ -12,6 +12,7 @@ import java.util.Map;
 public class LocationUpdate implements PointLike {
     public double lat;
     public double lon;
+    public String token;
     public String username;
 
     @Override
