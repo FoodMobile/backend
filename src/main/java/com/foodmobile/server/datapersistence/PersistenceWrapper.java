@@ -51,6 +51,17 @@ public class PersistenceWrapper {
         }
     }
 
+    public <T extends Entity, V> List<T> readAllWhereEqual(String collection, Class<T> tClass, String key, V value) throws PersistenceException {
+        try {
+            MongoQuery query = DatabaseAdapter.produceMongoAdapter().queryFactory();
+            query.setCollection(collection);
+            query.setFilter(Filters.eq(key, value));
+            return DatabaseAdapter.produceMongoAdapter().read(query, tClass);
+        } catch (Exception ex) {
+            throw new PersistenceException("Failed to read multi: " + ex.getMessage(), ex);
+        }
+    }
+
     public <T extends Entity, V> Optional<T> readWhereEqual(String collection, Class<T> tClass, String key, V value) throws PersistenceException {
         try {
             MongoQuery query = DatabaseAdapter.produceMongoAdapter().queryFactory();

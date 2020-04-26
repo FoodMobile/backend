@@ -137,6 +137,14 @@ public class BusinessController {
     public DataModelResponse<Truck> createTruck(@RequestParam String companyGuid, @RequestParam String userGuid) {
         var truck = Truck.create(companyGuid, userGuid);
         try (var dao = new DAO()) {
+            var companyOpt = dao.byGuid(companyGuid, Company.class);
+            if (!companyOpt.isPresent()) {
+                return DataModelResponse.failure("No such company");
+            }
+            var userOpt = dao.byGuid(userGuid, User.class);
+            if (!userOpt.isPresent()) {
+                return DataModelResponse.failure("No such user");
+            }
             dao.create(truck);
             return DataModelResponse.success(truck);
         } catch (Exception ex) {
