@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.LinkedList;
-import java.util.function.Function;
 
 class DemoPoint implements PointLike{
 	double lat;
