@@ -15,6 +15,18 @@ public class LocationUpdate implements PointLike {
     public String token;
     public String username;
 
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public double getX() {
         return lon;
