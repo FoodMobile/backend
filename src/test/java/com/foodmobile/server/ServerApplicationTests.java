@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.LinkedList;
+import java.util.function.Function;
 
 class DemoPoint implements PointLike{
 	double lat;
@@ -25,12 +26,12 @@ class DemoPoint implements PointLike{
 
 	@Override
 	public double getX() {
-		return lat;
+		return lon;
 	}
 
 	@Override
 	public double getY() {
-		return lon;
+		return lat;
 	}
 }
 
@@ -47,58 +48,79 @@ class ServerApplicationTests {
 		testDestroyDivision();
 	}
 
-	@Test
-	void testDivision() throws Exception{
-		usConnections.insert(new Node("andyslucky",-127.123,48.9375));// Q1
-		usConnections.insert(new Node("asdf",-90.865,30.3211));// Q3
-
-		usConnections.insert(new Node("asdfasdf",-127.8896,49));// Q1
-		usConnections.insert(new Node("123",-90,30));// Q3
-
-		usConnections.insert(new Node("a4",-128,49));// Q1
-		usConnections.insert(new Node("58",-90,30));// Q3
-
-		usConnections.insert(new Node("a",-127.123,48.9375));// Q1
-		usConnections.insert(new Node("b",-90.865,30.3211));// Q3
-
-		usConnections.insert(new Node("c",-127.8896,49));// Q1
-		usConnections.insert(new Node("d",-90,30));// Q3
-
-		usConnections.insert(new Node("e",-128,49));// Q1
-		usConnections.insert(new Node("f",-90,30));// Q3
-
-		usConnections.insert(new Node("g",-128,49));// Q1
-		usConnections.insert(new Node("h",-128,49));// Q1
-		usConnections.insert(new Node("i",-128,49));// Q1
-		usConnections.insert(new Node("j",-128,49));// Q1
-		assert (usConnections.getNodeCount() == 16);
-		assert (usConnections.getNodeCountForQuadrant((short) 1) == 10);
-		assert (usConnections.getNodeCountForQuadrant((short) 3) == 6);
-		assert(usConnections.isQuadrantDivided(1));
+	double lon(int quadrant){
+		if(quadrant == 1){
+			return -128;
+		}else if(quadrant == 2){
+			return -128 + 0.8*61;
+		}else if(quadrant == 3){
+			return -128 + 0.8*61;
+		}else{
+			return -128;
+		}
 	}
 
-	@Test
+	double lat(int quadrant){
+		if(quadrant == 1){
+			return 49;
+		}else if (quadrant == 2){
+			return 49;
+		}else if (quadrant == 3){
+			return 49 - 0.8*24;
+		}else {
+			return 49-0.8*24;
+		}
+	}
+
+	void testDivision() throws Exception{
+		usConnections.insert(new Node("andyslucky",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("asdf",lat(3),lon(3)));// Q3
+
+		usConnections.insert(new Node("asdfasdf",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("123",lat(3),lon(3)));// Q3
+
+		usConnections.insert(new Node("a4",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("58",lat(3),lon(3)));// Q3
+
+		usConnections.insert(new Node("a",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("b",lat(3),lon(3)));// Q3
+
+		usConnections.insert(new Node("c",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("d",lat(3),lon(3)));// Q3
+
+		usConnections.insert(new Node("e",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("f",lat(3),lon(3)));// Q3
+
+		usConnections.insert(new Node("g",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("h",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("i",lat(1),lon(1)));// Q1
+		usConnections.insert(new Node("j",lat(1),lon(1)));// Q1
+		assert (usConnections.getNodeCount() == 16);
+		assert(usConnections.isDivided());
+	}
+
+
 	void testSearch(){
-		PointLike p = new DemoPoint(-89,31);//Q3
+		PointLike p = new DemoPoint(lat(3),lon(3));//Q3
 		var list = new LinkedList<Node>();
 		usConnections.search(p,list);
 		assert(list.size() == 6);
 		assert(list.stream().allMatch(n-> n.username.equals("asdf") || n.username.equals("123") || n.username.equals("58") || n.username.equals("b") || n.username.equals("d") || n.username.equals("f")));
 		list = new LinkedList<Node>();
-		p = new DemoPoint(-128,30);//Q4
+		p = new DemoPoint(-lat(4),lon(4));//Q4
 		usConnections.search(p,list);
 		assert(list.size() == 0);
 	}
 
-	@Test
+
 	void testMoving(){
 
 		var originalSize = usConnections.getNodeCount();
 
 
-		usConnections.insert(new Node("asdfasdf",-128,30));//move to Q4
+		usConnections.insert(new Node("asdfasdf",lat(4),lon(4)));//move to Q4
 
-		PointLike p = new DemoPoint(-127.00123,31.569);// Q4
+		PointLike p = new DemoPoint(lat(4),lon(4));// Q4
 		var list = new LinkedList<Node>();
 		assert(usConnections.getNodeCount() == originalSize);
 
@@ -106,7 +128,7 @@ class ServerApplicationTests {
 		assert(list.size() == 1);//SIze of Q4 should be 1
 	}
 
-	@Test
+
 	void testDestroyDivision(){
 		// Remove 3 from Q1, this leaves 7 nodes which is less that the max number of nodes for Q1 so any sub-quadrants should be destroyed.
 		assert(usConnections.remove("andyslucky") &&
@@ -130,7 +152,7 @@ class DatabaseTests{
 		testUserEquals();
     }
 
-    @Test
+
 	void testCreateUser(){
 		try(var db = new DAO()){
 
@@ -142,7 +164,7 @@ class DatabaseTests{
 		}
     }
 
-    @Test
+
 	void testChangePassword(){
 		try(var db = new DAO()){
 			db.resetPassword("andyslucky","abcdef","123456");
@@ -154,7 +176,7 @@ class DatabaseTests{
 		}
 	}
 
-	@Test
+
 	void testGetUserByUserName(){
 		try(var db = new DAO()){
 			var user = db.getUserByUsername("andyslucky");
@@ -167,7 +189,7 @@ class DatabaseTests{
 		}
 	}
 
-	@Test
+
 	void testUserEquals(){
 		try(var db = new DAO()){
 			var user = db.getUserByUsername("andyslucky");
