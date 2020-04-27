@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,28 +31,32 @@ public class BasicUserController {
     Quad usConnections = new Quad(new Rect(-128,49,61,24));
 
     @PostMapping(value = "trucklocation",produces = "application/json")
-    public SimpleStatusResponse updateLocation(ServerHttpRequest  serverHttpRequest, ServerHttpResponse response, LocationUpdate update){
-       var tokens = serverHttpRequest.getHeaders().getOrDefault("token",new LinkedList<>());
-       if( tokens.size() > 0){
+    public SimpleStatusResponse updateLocation(HttpServletResponse response, LocationUpdate update){
+
+       if(update.token != null){
            try {
-               var token = JsonWebToken.verify(tokens.get(0));
+               var token = JsonWebToken.verify(update.token);
                var username = token.get("username");
                update.username = username;
                usConnections.insert(new Node(username,update.lat,update.lon));
                return SimpleStatusResponse.success();
            }catch(Exception ex){
-               response.setStatusCode(HttpStatus.FORBIDDEN);
+               if(response != null){
+               response.setStatus(HttpStatus.FORBIDDEN.value());
+               }
                return SimpleStatusResponse.failure("The specified token is invalid!");
            }
        }else{
-           response.setStatusCode(HttpStatus.UNAUTHORIZED);
+           if(response != null) {
+               response.setStatus(HttpStatus.UNAUTHORIZED.value());
+           }
            return SimpleStatusResponse.failure("No authorization token provided!");
        }
 
     }
 
     @PostMapping(path="nearbytrucks",produces = "application/json")
-    public List<Node> getLocations(double lat, double lon){
+    public List<Node> getLocations(@RequestParam("lat")long lat, @RequestParam("lon")double lon){
         List<Node> nodes = new LinkedList<>();
         var p = new PointLike() {
             @Override
@@ -69,21 +74,20 @@ public class BasicUserController {
     }
 
     @PostMapping(path="offline",produces = "application/json")
-    private SimpleStatusResponse goOffline(ServerHttpRequest request,ServerHttpResponse response){
-        var tokens = request.getHeaders().getOrDefault("token",new LinkedList<>());
-        if(tokens.size() > 0){
+    private SimpleStatusResponse goOffline(HttpServletResponse response, @RequestParam("token")String _token){
+        if(_token != null){
             try{
-            var token = JsonWebToken.verify(tokens.get(0));
+            var token = JsonWebToken.verify(_token);
             var username = token.get("username");
             usConnections.remove(username);
             return SimpleStatusResponse.success();
             }catch (Exception ex){
-                response.setStatusCode(HttpStatus.FORBIDDEN);
+                response.setStatus(HttpStatus.FORBIDDEN.value());
                 return SimpleStatusResponse.failure("Token is invalid!");
             }
 
         }else{
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return SimpleStatusResponse.failure("No authorization token provided!");
         }
     }
