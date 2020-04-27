@@ -89,7 +89,7 @@ public class AuthControllerTests {
         var regResponse = auth.registerNormal("joe shmoe", username, password, email);
         assertTrue(regResponse.success);
         var response = auth.resetPassword(username, password, "test");
-        assertTrue(response.success);
+        assertTrue(response.success, "Failed to reset password: " + response.errorMessage);
     }
 
     @Test

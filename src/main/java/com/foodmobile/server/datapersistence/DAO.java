@@ -51,10 +51,11 @@ public class DAO implements Closeable {
     }
 
     public void updatePassword(String username, String password) throws PersistenceException {
-        var user = userByUsername(username);
-        if (user.isPresent()) {
-            user.get().setPassword(password);
-            persistence.update("User", user.get());
+        var userOpt = userByUsername(username);
+        if (userOpt.isPresent()) {
+            var user = userOpt.get();
+            user.setPassword(password);
+            update(user);
         } else {
             throw new PersistenceException();
         }
