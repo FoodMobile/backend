@@ -35,8 +35,9 @@ public class BasicUserController {
 
        if(update.token != null){
            try {
-               var token = JsonWebToken.verify(update.token);
+              var token = JsonWebToken.verify(update.token);
                var username = token.get("username");
+               //var username = update.username;
                update.username = username;
                usConnections.insert(new Node(username,update.lat,update.lon));
                return SimpleStatusResponse.success();
@@ -61,12 +62,12 @@ public class BasicUserController {
         var p = new PointLike() {
             @Override
             public double getX() {
-                return lat;
+                return lon;
             }
 
             @Override
             public double getY() {
-                return lon;
+                return lat;
             }
         };
         usConnections.search(p,nodes);

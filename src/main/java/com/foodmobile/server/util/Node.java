@@ -57,7 +57,7 @@ public class Node implements PointLike {
      * Gets the latitude (x coordinate)
      */
     public double getX() {
-        return lat;
+        return lon;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class Node implements PointLike {
      * Gets the longitude (y coordinate)
      */
     public double getY() {
-        return lon;
+        return lat;
     }
 
 
