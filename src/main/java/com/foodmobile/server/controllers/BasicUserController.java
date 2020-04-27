@@ -56,7 +56,7 @@ public class BasicUserController {
     }
 
     @PostMapping(path="nearbytrucks",produces = "application/json")
-    public List<Node> getLocations(@RequestParam("lat")long lat, @RequestParam("lon")double lon){
+    public List<Node> getLocations(@RequestParam("lat")double lat, @RequestParam("lon")double lon){
         List<Node> nodes = new LinkedList<>();
         var p = new PointLike() {
             @Override
